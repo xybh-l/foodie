@@ -1,7 +1,9 @@
 package com.xybh.service.impl;
 
 import com.xybh.mapper.CategoryMapper;
+import com.xybh.mapper.ext.CategoryExtMapper;
 import com.xybh.pojo.Category;
+import com.xybh.pojo.vo.CategoryVO;
 import com.xybh.service.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Resource
     private CategoryMapper categoryMapper;
 
+    @Resource
+    private CategoryExtMapper categoryExtMapper;
+
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public List<Category> queryAllRootLevelCat() {
@@ -30,7 +35,12 @@ public class CategoryServiceImpl implements CategoryService {
         Example example = new Example(Category.class);
         example.createCriteria()
                 .andEqualTo("type", 1);
-        List<Category> result = categoryMapper.selectByExample(example);
-        return result;
+        return categoryMapper.selectByExample(example);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public List<CategoryVO> getSubCatList(Integer rootId) {
+        return categoryExtMapper.getSubCatList(rootId);
     }
 }
