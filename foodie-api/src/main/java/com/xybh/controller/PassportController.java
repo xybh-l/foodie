@@ -1,14 +1,21 @@
 package com.xybh.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.xybh.pojo.Users;
 import com.xybh.pojo.bo.UserBO;
 import com.xybh.service.UserService;
+import com.xybh.utils.CookieUtils;
 import com.xybh.utils.JSONResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @Author: xybh
@@ -72,7 +79,9 @@ public class PassportController {
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping("/login")
-    public JSONResult login(@RequestBody UserBO userBO) {
+    public JSONResult login(@RequestBody UserBO userBO,
+                            HttpServletRequest request,
+                            HttpServletResponse response) throws UnsupportedEncodingException {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         // 0.判断账号密码不为空
@@ -81,10 +90,37 @@ public class PassportController {
         }
         // 1.实现登录
         Users user = userService.queryUserForLogin(username, password);
-        if(user == null){
+        if (user == null) {
             return JSONResult.errorMsg("账号或密码错误");
         }
+
+        setNullProperty(user);
+        CookieUtils. setCookie(request, response, "user", URLEncoder.encode(JSON.toJSONString(user), "utf-8"));
         return JSONResult.ok(user);
+    }
+
+    private Users setNullProperty(Users user) {
+        user.setPassword(null);
+        user.setMobile(null);
+        user.setEmail(null);
+        user.setCreatedTime(null);
+        user.setUpdatedTime(null);
+        user.setBirthday(null);
+
+        return user;
+    }
+
+    @ApiOperation(value = "退出登录", notes = "注销")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestParam String userId,
+                            HttpServletRequest request,
+                            HttpServletResponse response) {
+        // 清除用户相关的cookie
+        CookieUtils.deleteCookie(request, response, "user");
+
+        // TODO 用户退出登录,清空购物车
+        // TODO 分布式会话中需要清楚用户数据
+        return JSONResult.ok();
     }
 
 }
