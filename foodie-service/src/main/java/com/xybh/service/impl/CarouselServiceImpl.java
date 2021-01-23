@@ -3,7 +3,6 @@ package com.xybh.service.impl;
 import com.xybh.mapper.CarouselMapper;
 import com.xybh.pojo.Carousel;
 import com.xybh.service.CarouselService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 

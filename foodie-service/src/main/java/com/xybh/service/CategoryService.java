@@ -2,7 +2,7 @@ package com.xybh.service;
 
 import com.xybh.pojo.Category;
 import com.xybh.pojo.vo.CategoryVO;
-import io.swagger.models.auth.In;
+import com.xybh.pojo.vo.NewItemsVO;
 
 import java.util.List;
 
@@ -27,4 +27,11 @@ public interface CategoryService {
      * @return  CategoryVO 分类列表
      */
     List<CategoryVO> getSubCatList(Integer rootId);
+
+    /**
+     * 查询最新的6条商品信息
+     * @param rootId 一级分类id
+     * @return
+     */
+    List<NewItemsVO> getSixNewItemLazy(String rootId);
 }

@@ -1,3 +1,4 @@
+# 登录测试
 POST http://localhost:8088/passport/login
 Content-Type: application/json
 
@@ -7,7 +8,9 @@ Content-Type: application/json
 }
 
 
+
 ###
+# 注册测试
 POST http://localhost:8088/passport/regist
 Content-Type: application/json
 
@@ -18,4 +21,5 @@ Content-Type: application/json
 }
 
 ###
+# 判断用户名是否存在
 GET http://localhost:8088/passport/usernameIsExist?username=1

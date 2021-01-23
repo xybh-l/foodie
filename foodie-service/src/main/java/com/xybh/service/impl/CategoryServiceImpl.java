@@ -4,6 +4,7 @@ import com.xybh.mapper.CategoryMapper;
 import com.xybh.mapper.ext.CategoryExtMapper;
 import com.xybh.pojo.Category;
 import com.xybh.pojo.vo.CategoryVO;
+import com.xybh.pojo.vo.NewItemsVO;
 import com.xybh.service.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,5 +44,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryVO> getSubCatList(Integer rootId) {
         return categoryExtMapper.getSubCatList(rootId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public List<NewItemsVO> getSixNewItemLazy(String rootId) {
+        HashMap<String, Object> map = new HashMap<>(2);
+        map.put("rootCatId", rootId);
+        return categoryExtMapper.getSixNewItemLazy(map);
     }
 }

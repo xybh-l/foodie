@@ -1,0 +1,7 @@
+GET http://localhost:8088/index/sixNewItems/1
+
+###
+GET http://localhost:8088/items/commentLevel?itemId=cake-1001
+
+###
+GET http://localhost:8088/items/comments?itemId=cake-1001&level=&page=1&pageSize=10

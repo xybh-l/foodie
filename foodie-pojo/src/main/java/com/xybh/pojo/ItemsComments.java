@@ -1,7 +1,9 @@
 package com.xybh.pojo;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "items_comments")
 public class ItemsComments {
@@ -12,7 +14,7 @@ public class ItemsComments {
     private String id;
 
     /**
-     * 用户id 用户名须脱敏
+     * 用户id
      */
     @Column(name = "user_id")
     private String userId;
@@ -65,6 +67,11 @@ public class ItemsComments {
     private Date updatedTime;
 
     /**
+     * 匿名
+     */
+    private Integer anonymous;
+
+    /**
      * 获取id主键
      *
      * @return id - id主键
@@ -83,18 +90,18 @@ public class ItemsComments {
     }
 
     /**
-     * 获取用户id 用户名须脱敏
+     * 获取用户id
      *
-     * @return user_id - 用户id 用户名须脱敏
+     * @return user_id - 用户id
      */
     public String getUserId() {
         return userId;
     }
 
     /**
-     * 设置用户id 用户名须脱敏
+     * 设置用户id
      *
-     * @param userId 用户id 用户名须脱敏
+     * @param userId 用户id
      */
     public void setUserId(String userId) {
         this.userId = userId;
@@ -242,5 +249,23 @@ public class ItemsComments {
      */
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    /**
+     * 获取匿名
+     *
+     * @return anonymous - 匿名
+     */
+    public Integer getAnonymous() {
+        return anonymous;
+    }
+
+    /**
+     * 设置匿名
+     *
+     * @param anonymous 匿名
+     */
+    public void setAnonymous(Integer anonymous) {
+        this.anonymous = anonymous;
     }
 }

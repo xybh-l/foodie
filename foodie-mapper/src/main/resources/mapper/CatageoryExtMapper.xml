@@ -19,6 +19,20 @@
         </collection>
     </resultMap>
 
+    <resultMap id="myNewItemsVO" type="com.xybh.pojo.vo.NewItemsVO">
+        <id column="rootCatId" property="rootCatId"/>
+        <result column="rootCatName" property="rootCatName"/>
+        <result column="slogan" property="slogan"/>
+        <result column="catImage" property="catImage"/>
+        <result column="bgColor" property="bgColor"/>
+        <collection property="simpleItemList" ofType="com.xybh.pojo.vo.SimpleItemVO">
+            <id column="itemId" property="itemId"/>
+            <result column="itemName" property="itemName"/>
+            <result column="itemUrl" property="itemUrl"/>
+            <result column="createdTime" property="createdTime"/>
+        </collection>
+    </resultMap>
+
     <select id="getSubCatList" parameterType="Integer" resultMap="BaseResultMap">
         SELECT f.id            AS id,
                f.`name`        AS `name`,
@@ -31,5 +45,24 @@
         FROM `category` f
                  LEFT JOIN `category` child ON f.id = child.father_id
         WHERE f.id = #{rootCatId};
+    </select>
+    <select id="getSixNewItemLazy" resultMap="myNewItemsVO" parameterType="map">
+        SELECT cat.id         AS rootCatId,
+               cat.`name`     AS rootCatName,
+               cat.slogan     AS slogan,
+               cat.cat_image  AS catImage,
+               cat.bg_color   AS bgColor,
+               i.id           AS itemId,
+               i.item_name    AS itemName,
+               img.url        AS itemUrl,
+               i.CREATED_TIME AS createdTime
+        FROM `category` cat
+                 LEFT JOIN items i ON cat.id = i.root_cat_id
+                 LEFT JOIN items_img img ON i.id = img.item_id
+        WHERE cat.type = 1
+          AND i.root_cat_id = #{paramMap.rootCatId}
+          AND img.is_main = 1
+        ORDER BY i.created_time DESC
+        LIMIT 0,6
     </select>
 </mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xybh.mapper.ext.ItemsExtMapper">
+
+    <resultMap id="BaseResultMap" type="com.xybh.pojo.vo.ItemsCommentsVO">
+        <result property="commentLevel" column="commentLevel"/>
+        <result property="content" column="content"/>
+        <result property="specName" column="specName"/>
+        <result property="nickname" column="nickname"/>
+        <result property="createTime" column="createTime"/>
+        <result property="userFace" column="face"/>
+    </resultMap>
+
+    <resultMap id="SearchItemsResultMap" type="com.xybh.pojo.vo.SearchItemsVO">
+        <result property="itemId" column="itemId"/>
+        <result property="itemName" column="itemName"/>
+        <result property="price" column="priceDiscount"/ >
+        <result property="imgUrl" column="imgUrl"/>
+        <result property="sellCounts" column="sellCounts"/>
+    </resultMap>
+
+
+    <select id="queryItemComments" parameterType="map" resultMap="BaseResultMap">
+        SELECT ic.comment_level AS commentLevel,
+        ic.content AS content,
+        ic.sepc_name AS specName,
+        ic.created_time AS createTime,
+        ic.anonymous AS anonymous,
+        users.nickname AS nickname,
+        users.face AS face
+        FROM `items_comments` ic
+        LEFT JOIN `users` ON users.id = ic.user_id
+        WHERE ic.item_id = #{paramsMap.itemId}
+        <if test="paramsMap.commentLevel != null and paramsMap.commentLevel != ''">
+            AND ic.comment_level = #{paramsMap.commentLevel}
+        </if>
+    </select>
+
+    <select id="searchItems" parameterType="map" resultMap="SearchItemsResultMap">
+        SELECT i.id AS itemId,
+        i.item_name AS itemName,
+        i.sell_counts AS sellCounts,
+        ii.url AS imgUrl,
+        tempSpec.price_discount AS priceDiscount
+        FROM items i
+        LEFT JOIN items_img ii ON i.id = ii.item_id
+        LEFT JOIN (SELECT item_id, MIN(price_discount) AS price_discount
+        FROM items_spec
+        GROUP BY item_id) tempSpec ON tempSpec.item_id = i.id
+        WHERE ii.is_main = 1
+        <if test="paramsMap.keywords != null and paramsMap.keywords != '' ">
+            AND i.item_name like '%${paramsMap.keywords}%'
+        </if>
+        order by
+        <choose>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                i.sell_counts desc
+            </when>
+            <when test="paramsMap.sort ==  &quot;p &quot;">
+                tempSpec.price_discount asc
+            </when>
+            <otherwise>i.item_name asc</otherwise>
+        </choose>
+        /*
+            k: 默认, 代表默认排序,根据name
+            c: 根据销量排序
+            p: 根据价格排序
+        */
+    </select>
+</mapper>

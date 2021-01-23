@@ -1,7 +1,8 @@
 package com.xybh.pojo;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Users {
     /**
@@ -26,12 +27,12 @@ public class Users {
     private String nickname;
 
     /**
-     * 真实姓名 真实姓名
+     * 真实姓名
      */
     private String realname;
 
     /**
-     * 头像 头像
+     * 头像
      */
     private String face;
 
@@ -140,36 +141,36 @@ public class Users {
     }
 
     /**
-     * 获取真实姓名 真实姓名
+     * 获取真实姓名
      *
-     * @return realname - 真实姓名 真实姓名
+     * @return realname - 真实姓名
      */
     public String getRealname() {
         return realname;
     }
 
     /**
-     * 设置真实姓名 真实姓名
+     * 设置真实姓名
      *
-     * @param realname 真实姓名 真实姓名
+     * @param realname 真实姓名
      */
     public void setRealname(String realname) {
         this.realname = realname;
     }
 
     /**
-     * 获取头像 头像
+     * 获取头像
      *
-     * @return face - 头像 头像
+     * @return face - 头像
      */
     public String getFace() {
         return face;
     }
 
     /**
-     * 设置头像 头像
+     * 设置头像
      *
-     * @param face 头像 头像
+     * @param face 头像
      */
     public void setFace(String face) {
         this.face = face;

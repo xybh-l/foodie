@@ -4,6 +4,7 @@ import com.xybh.enums.YesOrNo;
 import com.xybh.pojo.Carousel;
 import com.xybh.pojo.Category;
 import com.xybh.pojo.vo.CategoryVO;
+import com.xybh.pojo.vo.NewItemsVO;
 import com.xybh.service.CarouselService;
 import com.xybh.service.CategoryService;
 import com.xybh.utils.JSONResult;
@@ -58,4 +59,17 @@ public class IndexController {
         List<CategoryVO> subCatList = categoryService.getSubCatList(rootCatId);
         return JSONResult.ok(subCatList);
     }
+
+    @ApiOperation(value = "查询六个最新商品信息", notes = "查询六个最新商品信息", httpMethod = "GET")
+    @GetMapping("/sixNewItems/{rootCatId}")
+    public JSONResult sixNewItems(@ApiParam(name = "rootCatId", value = "一级分类id", required = true)
+                                  @PathVariable String rootCatId) {
+        if (rootCatId == null) {
+            return JSONResult.errorMsg("分类不存在");
+        }
+        List<NewItemsVO> list = categoryService.getSixNewItemLazy(rootCatId);
+        return JSONResult.ok(list);
+    }
+
+
 }
