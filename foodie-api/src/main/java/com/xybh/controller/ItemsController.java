@@ -2,10 +2,7 @@ package com.xybh.controller;
 
 import com.xybh.enums.YesOrNo;
 import com.xybh.pojo.*;
-import com.xybh.pojo.vo.CategoryVO;
-import com.xybh.pojo.vo.CommentLevelCountVO;
-import com.xybh.pojo.vo.ItemInfoVO;
-import com.xybh.pojo.vo.NewItemsVO;
+import com.xybh.pojo.vo.*;
 import com.xybh.service.CarouselService;
 import com.xybh.service.CategoryService;
 import com.xybh.service.ItemService;
@@ -146,5 +143,20 @@ public class ItemsController extends BaseController {
 
         PagedGridResult grid = itemService.searchItemsByThirdCat(catId, sort, page, pageSize);
         return JSONResult.ok(grid);
+    }
+
+    /**
+     * 用于用户长时间未登录网站,刷新购物车中的数据
+     */
+    @ApiOperation(value = "根据商品规格ids查找最新的商品数据", notes = "根据商品规格ids查找最新的商品数据", httpMethod = "GET")
+    @GetMapping("/refresh")
+    public JSONResult refresh(
+            @ApiParam(name = "itemSpecIds", value = "拼接的规格ids", required = true, example = "1,2,3,4")
+            @RequestParam String itemSpecIds) {
+        if (StringUtils.isBlank(itemSpecIds)) {
+            return JSONResult.errorMsg("");
+        }
+        List<ShopcartVO> shopcartVO = itemService.queryItemsBySpecIds(itemSpecIds);
+        return JSONResult.ok(shopcartVO);
     }
 }

@@ -1,4 +1,4 @@
-package com.xybh.pojo.bo;
+package com.xybh.pojo.vo;
 
 /**
  * @Author: xybh
@@ -6,13 +6,12 @@ package com.xybh.pojo.bo;
  * @Date: Created in 14:18 2021/1/23
  * @Modified:
  */
-public class ShopcartBO {
+public class ShopcartVO {
     private String itemId;
     private String itemImgUrl;
     private String itemName;
     private String specId;
     private String specName;
-    private Integer buyCounts;
     private String priceDiscount;
     private String priceNormal;
 
@@ -24,7 +23,6 @@ public class ShopcartBO {
                 ", itemName='" + itemName + '\'' +
                 ", specId='" + specId + '\'' +
                 ", specName='" + specName + '\'' +
-                ", buyCounts=" + buyCounts +
                 ", priceDiscount='" + priceDiscount + '\'' +
                 ", priceNormal='" + priceNormal + '\'' +
                 '}';
@@ -68,14 +66,6 @@ public class ShopcartBO {
 
     public void setSpecName(String specName) {
         this.specName = specName;
-    }
-
-    public Integer getBuyCounts() {
-        return buyCounts;
-    }
-
-    public void setBuyCounts(Integer buyCounts) {
-        this.buyCounts = buyCounts;
     }
 
     public String getPriceDiscount() {

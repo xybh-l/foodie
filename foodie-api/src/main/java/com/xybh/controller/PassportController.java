@@ -82,7 +82,7 @@ public class PassportController {
     @PostMapping("/login")
     public JSONResult login(@RequestBody UserBO userBO,
                             HttpServletRequest request,
-                            HttpServletResponse response) throws UnsupportedEncodingException {
+                            HttpServletResponse response) {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         // 0.判断账号密码不为空

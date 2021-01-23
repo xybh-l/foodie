@@ -2,6 +2,7 @@ package com.xybh.mapper.ext;
 
 import com.xybh.pojo.vo.ItemsCommentsVO;
 import com.xybh.pojo.vo.SearchItemsVO;
+import com.xybh.pojo.vo.ShopcartVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -32,5 +33,12 @@ public interface ItemsExtMapper {
      * @return 商品信息VO
      */
     List<SearchItemsVO> searchItemsByThirdCat(@Param("paramsMap") HashMap<String, Object> map);
+
+    /**
+     * 根据商品规格ID查询商品信息
+     * @param specIdsList
+     * @return
+     */
+    List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List specIdsList);
 
 }

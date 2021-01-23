@@ -3,6 +3,7 @@ package com.xybh.service;
 import com.xybh.pojo.*;
 import com.xybh.pojo.vo.CommentLevelCountVO;
 import com.xybh.pojo.vo.SearchItemsVO;
+import com.xybh.pojo.vo.ShopcartVO;
 import com.xybh.utils.PagedGridResult;
 
 import java.util.List;
@@ -82,4 +83,11 @@ public interface ItemService {
      * @return
      */
     PagedGridResult searchItemsByThirdCat(Integer catId, String sort, Integer page, Integer pageSize);
+
+    /**
+     * 根据规格ids查询最新的商品信息
+     * @param specIds 商品规格id列表
+     * @return
+     */
+    List<ShopcartVO> queryItemsBySpecIds(String specIds);
 }

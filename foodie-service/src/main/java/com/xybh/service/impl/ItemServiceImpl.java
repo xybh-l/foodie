@@ -9,6 +9,7 @@ import com.xybh.pojo.*;
 import com.xybh.pojo.vo.CommentLevelCountVO;
 import com.xybh.pojo.vo.ItemsCommentsVO;
 import com.xybh.pojo.vo.SearchItemsVO;
+import com.xybh.pojo.vo.ShopcartVO;
 import com.xybh.service.ItemService;
 import com.xybh.utils.DesensitizationUtil;
 import com.xybh.utils.PagedGridResult;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -150,5 +153,15 @@ public class ItemServiceImpl implements ItemService {
         grid.setTotal(pageList.getPages());
         grid.setRecords(pageList.getTotal());
         return grid;
+    }
+
+    @Override
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+
+        String[] ids = specIds.split(",");
+        ArrayList<String> specIdList = new ArrayList<>();
+        Collections.addAll(specIdList, ids);
+
+        return itemsExtMapper.queryItemsBySpecIds(specIdList);
     }
 }
