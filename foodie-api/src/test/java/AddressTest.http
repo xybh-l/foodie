@@ -1,0 +1,12 @@
+POST http://localhost:8088/address/add
+Content-Type: application/json
+
+{
+    "userId":"1352483526137610240",
+    "receiver":"蓝旺",
+    "mobile":"13133777071",
+    "province":"江西",
+    "city":"赣州",
+    "district":"章贡区",
+    "detail":"江西省赣州市蓉江新区潭东镇"
+}

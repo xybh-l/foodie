@@ -36,9 +36,9 @@ public interface ItemsExtMapper {
 
     /**
      * 根据商品规格ID查询商品信息
-     * @param specIdsList
+     * @param specIdsList 商品规格ID列表
      * @return
      */
-    List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List specIdsList);
+    List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List<String> specIdsList);
 
 }

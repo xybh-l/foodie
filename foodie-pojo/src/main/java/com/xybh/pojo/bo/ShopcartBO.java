@@ -1,19 +1,31 @@
 package com.xybh.pojo.bo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @Author: xybh
  * @Description:
  * @Date: Created in 14:18 2021/1/23
  * @Modified:
  */
+@ApiModel("购物车信息BO")
 public class ShopcartBO {
+    @ApiModelProperty(value = "商品id", name = "itemId", required = true)
     private String itemId;
+    @ApiModelProperty(value = "商品图片url", name = "itemImgUrl", required = true)
     private String itemImgUrl;
+    @ApiModelProperty(value = "商品名称", name = "itemName", required = true)
     private String itemName;
+    @ApiModelProperty(value = "商品规格id", name = "specId", required = true)
     private String specId;
+    @ApiModelProperty(value = "商品规格名称", name = "specName", required = true)
     private String specName;
+    @ApiModelProperty(value = "购买总数", name = "buyCounts", required = true)
     private Integer buyCounts;
+    @ApiModelProperty(value = "商品折扣单价", name = "priceDiscount", required = true)
     private String priceDiscount;
+    @ApiModelProperty(value = "商品平常价格", name = "priceNormal", required = true)
     private String priceNormal;
 
     @Override
