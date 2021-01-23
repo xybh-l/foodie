@@ -6,6 +6,7 @@ import com.xybh.pojo.bo.UserBO;
 import com.xybh.service.UserService;
 import com.xybh.utils.CookieUtils;
 import com.xybh.utils.JSONResult;
+import com.xybh.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -95,7 +96,11 @@ public class PassportController {
         }
 
         setNullProperty(user);
-        CookieUtils. setCookie(request, response, "user", URLEncoder.encode(JSON.toJSONString(user), "utf-8"));
+        CookieUtils. setCookie(request, response, "user", JsonUtils.objectToJson(user), true);
+
+        // TODO 生成用户token, 存入redis会话
+        // TODO 同步购物车数据
+
         return JSONResult.ok(user);
     }
 
