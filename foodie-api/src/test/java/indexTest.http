@@ -5,3 +5,9 @@ GET http://localhost:8088/items/commentLevel?itemId=cake-1001
 
 ###
 GET http://localhost:8088/items/comments?itemId=cake-1001&level=&page=1&pageSize=10
+
+###
+GET http://localhost:8088/index/cats
+
+###
+GET http://localhost:8088/index/subCat/1

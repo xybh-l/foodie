@@ -25,4 +25,12 @@ public interface ItemsExtMapper {
      * @return 商品信息VO
      */
     List<SearchItemsVO> searchItems(@Param("paramsMap") HashMap<String, Object> map);
+
+    /**
+     * 根据三级分类查询商品
+     * @param map 参数
+     * @return 商品信息VO
+     */
+    List<SearchItemsVO> searchItemsByThirdCat(@Param("paramsMap") HashMap<String, Object> map);
+
 }

@@ -44,7 +44,7 @@
                child.father_id AS subFatherId
         FROM `category` f
                  LEFT JOIN `category` child ON f.id = child.father_id
-        WHERE f.id = #{rootCatId};
+        WHERE f.father_id = #{rootCatId};
     </select>
     <select id="getSixNewItemLazy" resultMap="myNewItemsVO" parameterType="map">
         SELECT cat.id         AS rootCatId,
