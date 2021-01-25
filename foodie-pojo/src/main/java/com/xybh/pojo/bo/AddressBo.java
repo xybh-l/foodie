@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(value = "新增或修改地址的BO")
 public class AddressBo {
+    private String addressId;
     @ApiModelProperty(name = "userId", value = "用户id")
     private String userId;
     @ApiModelProperty(name = "receiver", value = "收货人")
@@ -23,6 +24,14 @@ public class AddressBo {
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
     }
 
     public void setUserId(String userId) {

@@ -1,6 +1,7 @@
 package com.xybh.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.xybh.enums.YesOrNo;
 import com.xybh.mapper.CarouselMapper;
 import com.xybh.mapper.UserAddressMapper;
 import com.xybh.pojo.Carousel;
@@ -42,7 +43,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public void addNewUserAddress(AddressBo address) {
         // 1.判断当前用户是否存在地址, 如果没有, 则新增为'默认地址'
-        Integer isDefault = 0;
+        int isDefault = 0;
         List<UserAddress> addressList = this.queryAll(address.getUserId());
         if (addressList == null || addressList.isEmpty()) {
             isDefault = 1;
@@ -56,5 +57,45 @@ public class AddressServiceImpl implements AddressService {
         userAddress.setUpdatedTime(userAddress.getCreatedTime());
 
         addressMapper.insert(userAddress);
+    }
+
+    @Override
+    public void deleteUserAddress(String userId, String addressId) {
+        UserAddress userAddress = new UserAddress();
+        userAddress.setUserId(userId);
+        userAddress.setId(addressId);
+
+        addressMapper.delete(userAddress);
+    }
+
+    @Override
+    public void updateUserAddress(AddressBo addressBo) {
+        UserAddress userAddress = new UserAddress();
+        BeanUtils.copyProperties(addressBo, userAddress);
+        userAddress.setUpdatedTime(new Date());
+        userAddress.setId(addressBo.getAddressId());
+
+        addressMapper.updateByPrimaryKeySelective(userAddress);
+    }
+
+    @Override
+    public void updateUserAddressToBeDefault(String userId, String addressId) {
+        //1. 查找默认地址
+        UserAddress userAddress = new UserAddress();
+        userAddress.setUserId(userId);
+        userAddress.setIsDefault(YesOrNo.YES.type);
+        List<UserAddress> list = addressMapper.select(userAddress);
+        for (UserAddress ua: list) {
+            if(ua.getIsDefault().equals(YesOrNo.YES.type)){
+                ua.setIsDefault(YesOrNo.NO.type);
+                addressMapper.updateByPrimaryKeySelective(ua);
+            }
+            UserAddress defaultAddress = new UserAddress();
+            defaultAddress.setId(addressId);
+            defaultAddress.setUserId(userId);
+            defaultAddress.setIsDefault(YesOrNo.YES.type);
+            addressMapper.updateByPrimaryKeySelective(defaultAddress);
+        }
+
     }
 }

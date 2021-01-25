@@ -11,7 +11,7 @@ public class UserAddress {
      * 地址主键id
      */
     @Id
-    private String id;
+    private String  id;
 
     /**
      * 关联用户id
