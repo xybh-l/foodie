@@ -59,6 +59,7 @@ public class AddressServiceImpl implements AddressService {
         addressMapper.insert(userAddress);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void deleteUserAddress(String userId, String addressId) {
         UserAddress userAddress = new UserAddress();
@@ -68,6 +69,7 @@ public class AddressServiceImpl implements AddressService {
         addressMapper.delete(userAddress);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void updateUserAddress(AddressBo addressBo) {
         UserAddress userAddress = new UserAddress();
@@ -78,6 +80,18 @@ public class AddressServiceImpl implements AddressService {
         addressMapper.updateByPrimaryKeySelective(userAddress);
     }
 
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public UserAddress queryUserAddress(String userId, String addressId) {
+        UserAddress address = new UserAddress();
+        address.setUserId(userId);
+        address.setId(addressId);
+
+        return addressMapper.selectOne(address);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void updateUserAddressToBeDefault(String userId, String addressId) {
         //1. 查找默认地址
@@ -85,8 +99,8 @@ public class AddressServiceImpl implements AddressService {
         userAddress.setUserId(userId);
         userAddress.setIsDefault(YesOrNo.YES.type);
         List<UserAddress> list = addressMapper.select(userAddress);
-        for (UserAddress ua: list) {
-            if(ua.getIsDefault().equals(YesOrNo.YES.type)){
+        for (UserAddress ua : list) {
+            if (ua.getIsDefault().equals(YesOrNo.YES.type)) {
                 ua.setIsDefault(YesOrNo.NO.type);
                 addressMapper.updateByPrimaryKeySelective(ua);
             }

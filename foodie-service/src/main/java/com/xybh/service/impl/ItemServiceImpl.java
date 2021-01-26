@@ -3,6 +3,7 @@ package com.xybh.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xybh.enums.CommentLevel;
+import com.xybh.enums.YesOrNo;
 import com.xybh.mapper.*;
 import com.xybh.mapper.ext.ItemsExtMapper;
 import com.xybh.pojo.*;
@@ -95,6 +96,7 @@ public class ItemServiceImpl implements ItemService {
         return countsVO;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     Integer getCommentCounts(String itemId, Integer level) {
         ItemsComments condition = new ItemsComments();
         condition.setItemId(itemId);
@@ -114,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemsCommentsVO> list = itemsExtMapper.queryItemComments(map);
 
         for (ItemsCommentsVO vo : list) {
-            if(vo.getAnonymous() == 0){
+            if (vo.getAnonymous() == 0) {
                 vo.setNickname(DesensitizationUtil.commonDisplay(vo.getNickname()));
             }
         }
@@ -155,6 +157,23 @@ public class ItemServiceImpl implements ItemService {
         return grid;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public String queryItemMainImgById(String itemId) {
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setItemId(itemId);
+        itemsImg.setIsMain(YesOrNo.YES.type);
+        ItemsImg result = itemsImgMapper.selectOne(itemsImg);
+        return result != null ? result.getUrl() : "";
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public ItemsSpec queryItemSpecById(String specId) {
+        return itemsSpecMapper.selectByPrimaryKey(specId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
 
@@ -163,5 +182,22 @@ public class ItemServiceImpl implements ItemService {
         Collections.addAll(specIdList, ids);
 
         return itemsExtMapper.queryItemsBySpecIds(specIdList);
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public void decreaseItemSpecStock(String specId, Integer buyCounts) {
+//        // 1.查询库存
+//        int stock = 10;
+//        // 2.判断库存，是否库存足够
+//        if(stock - buyCounts < 0){
+//            // 提示用户库存不够
+//        }
+
+        int result = itemsExtMapper.decreaseItemSpecStock(specId, buyCounts);
+        if(result != 1){
+            throw new RuntimeException("订单创建失败，原因：库存不足");
+        }
     }
 }

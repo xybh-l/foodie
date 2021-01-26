@@ -22,6 +22,7 @@ public interface ItemsExtMapper {
 
     /**
      * 根据商品名称及排序条件模糊查询商品
+     *
      * @param map 参数
      * @return 商品信息VO
      */
@@ -29,6 +30,7 @@ public interface ItemsExtMapper {
 
     /**
      * 根据三级分类查询商品
+     *
      * @param map 参数
      * @return 商品信息VO
      */
@@ -36,9 +38,11 @@ public interface ItemsExtMapper {
 
     /**
      * 根据商品规格ID查询商品信息
+     *
      * @param specIdsList 商品规格ID列表
      * @return
      */
     List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List<String> specIdsList);
 
+    int decreaseItemSpecStock(@Param("specId") String specId, @Param("pendingCount") Integer pendingCount);
 }
