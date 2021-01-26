@@ -44,5 +44,11 @@ public interface ItemsExtMapper {
      */
     List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List<String> specIdsList);
 
-    int decreaseItemSpecStock(@Param("specId") String specId, @Param("pendingCount") Integer pendingCount);
+    /**
+     * 减少库存
+     * @param specId        商品规格id
+     * @param pendingCount  待减去数量
+     * @return
+     */
+    int decreaseItemSpecStock(@Param("specId") String specId, @Param("pendingCounts") Integer pendingCount);
 }

@@ -8,6 +8,8 @@ import com.xybh.mapper.OrderStatusMapper;
 import com.xybh.mapper.OrdersMapper;
 import com.xybh.pojo.*;
 import com.xybh.pojo.bo.SubmitOrderBO;
+import com.xybh.pojo.vo.MerchantOrdersVO;
+import com.xybh.pojo.vo.OrderVO;
 import com.xybh.service.AddressService;
 import com.xybh.service.ItemService;
 import com.xybh.service.OrderService;
@@ -40,7 +42,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
-    public void createOrder(SubmitOrderBO submitOrderBO) {
+    public void updateOrderStatus(String orderId, Integer orderStatus) {
+        OrderStatus paidStatus = new OrderStatus();
+        paidStatus.setOrderId(orderId);
+        paidStatus.setOrderStatus(orderStatus);
+        paidStatus.setPayTime(new Date());
+
+        orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public OrderVO createOrder(SubmitOrderBO submitOrderBO) {
         String userId = submitOrderBO.getUserId();
         Integer payMethod = submitOrderBO.getPayMethod();
         String addressId = submitOrderBO.getAddressId();
@@ -52,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
         // 1.新订单数据保存
         String orderId = IdUtil.getSnowflake(0, 0).nextIdStr();
         Orders order = new Orders();
+        order.setUserId(userId);
         order.setId(orderId);
         UserAddress address = addressService.queryUserAddress(userId, addressId);
         order.setReceiverName(address.getReceiver());
@@ -111,5 +125,17 @@ public class OrderServiceImpl implements OrderService {
         waitPayOrderStatus.setOrderStatus(OrderStatusEnum.WAIT_PAY.type);
         waitPayOrderStatus.setCreatedTime(new Date());
         orderStatusMapper.insert(waitPayOrderStatus);
+
+        // 4.构建商户订单,用于传给支付中心
+        MerchantOrdersVO merchantOrdersVO = new MerchantOrdersVO();
+        merchantOrdersVO.setMerchantOrderId(orderId);
+        merchantOrdersVO.setMerchantUserId(userId);
+        merchantOrdersVO.setAmount(realPayAmount + postAmount);
+        merchantOrdersVO.setPayMethod(payMethod);
+
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderId(orderId);
+        orderVO.setMerchantOrdersVO(merchantOrdersVO);
+        return orderVO;
     }
 }

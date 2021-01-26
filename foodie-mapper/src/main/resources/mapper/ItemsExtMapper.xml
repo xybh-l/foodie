@@ -116,7 +116,7 @@
             items_spec
         SET stock = stock - #{pendingCounts}
         WHERE id = #{specId}
-        #判断当前库存大于需要扣除的数量
           AND stock >= #{pendingCounts}
+        #判断当前库存大于需要扣除的数量
     </update>
 </mapper>
