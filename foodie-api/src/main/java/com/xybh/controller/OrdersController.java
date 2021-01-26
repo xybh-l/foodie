@@ -48,6 +48,10 @@ public class OrdersController extends BaseController{
         String orderId = orderVO.getOrderId();
         MerchantOrdersVO merchantOrdersVO = orderVO.getMerchantOrdersVO();
         merchantOrdersVO.setReturnUrl(PAY_RETURN_URL);
+
+        // 为了方便测试购买,所有的支付金额都统一为一分钱
+        merchantOrdersVO.setAmount(1);
+
         // 2.创建订单以后,移除购物车中已结算(已提交)的商品
         // TODO 整合Redis后,完善购物车中的已结算商品清除,并且同步到前端的cookie中
 //        CookieUtils.setCookie(request, response, FOODIE_SHOPCART, "", true);
