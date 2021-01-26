@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=UTF-8&method=alipay.trade.page.pay&sign=W929tIosG9LRm0TZEznnAOmYbEfcRWjw0jA6xZfzYEYZQhtvQ%2BUZXfXRjlZyQdmyeVD25GjoOuzjNUGzUP3XNgTHsC6IvPLd1FdOE8sq%2F2LWLEbXsJQj5cN%2BES3PZnI9n12neq9Wp1LEzex9Qunov08tduxQc7C%2FrMrwv6o962TYVTr7PJTho1Bc7LZMg5Wyh%2F8OspZRQYpsA73XTwZgKhuJvWDcUBkuaONLPQM%2FUWETAA59qK0kr5EWA1%2FV173klJbaJ%2FHbiN92DZ7xZk801Q%2BfwyjiLuV%2B%2FPi%2B97snbLwrztrEa%2FX84bnW7um7Yuhx5GotMaFwREt7Of9qBcF7Aw%3D%3D&return_url=http%3A%2F%2Flocalhost%3A8089%2FalipayResult&notify_url=http%3A%2F%2Flocalhost%3A8089%2Fpayment%2Fnotice%2Falipay&version=1.0&app_id=2016092500593977&sign_type=RSA2&timestamp=2021-01-26+20%3A22%3A04&alipay_sdk=alipay-easysdk-java&format=json">
+    <input type="hidden" name="biz_content" value="{&quot;timeout_express&quot;:&quot;1d&quot;,&quot;out_trade_no&quot;:&quot;1354039866064633856&quot;,&quot;product_code&quot;:&quot;FAST_INSTANT_TRADE_PAY&quot;,&quot;total_amount&quot;:&quot;0.01&quot;,&quot;subject&quot;:&quot;天天吃货-付款用户[1352483526137610240]&quot;}">
+    <input type="submit" value="立即支付" style="display:none" >
+</form>
+<script>document.forms[0].submit();</script>
+</body>
+</html>

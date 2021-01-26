@@ -19,6 +19,9 @@ public class BaseController {
     public static final String PAY_RETURN_URL = "http://localhost:8088/orders/notifyMerchantOrderPaid";
 
     // 支付中心
-//    public static final String PAYMENT_URL = "https://localhost:8089/foodie-payment/payment/createMerchantOrder";
-    public static final String PAYMENT_URL = "https://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";
+    public static final String PAYMENT_URL = "http://localhost:8089/payment/createMerchantOrder";
+//    public static final String PAYMENT_URL = "https://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";
+
+    // 查询订单详情
+    public static final String QUERY_PAY_INFO_URL = "http://localhost:8089/payment/getPaymentCenterOrderInfo";
 }

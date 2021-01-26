@@ -1,5 +1,7 @@
 package com.xybh.service;
 
+import cn.hutool.db.sql.Order;
+import com.xybh.pojo.OrderStatus;
 import com.xybh.pojo.UserAddress;
 import com.xybh.pojo.bo.AddressBo;
 import com.xybh.pojo.bo.SubmitOrderBO;
@@ -27,4 +29,18 @@ public interface OrderService {
      * @param orderStatus   订单状态
      */
     void updateOrderStatus(String orderId, Integer orderStatus);
+
+    /**
+     * 根据订单号查询用户id
+     * @param orderId
+     * @return
+     */
+    String queryUserIdByOrderId(String orderId);
+
+    /**
+     * 查询订单状态
+     * @param orderId 订单id
+     * @return
+     */
+    OrderStatus queryOrderStatusInfo(String orderId);
 }

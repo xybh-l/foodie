@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <context id="MysqlContext" targetRuntime="MyBatis3Simple" defaultModelType="flat">        <property name="beginningDelimiter" value="`"/>
+    <context id="MysqlContext" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <!-- 通用Mapper所在目录 -->
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
@@ -12,7 +13,7 @@
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/food-shop?serverTimezone=Asia/Shanghai"
+                        connectionURL="jdbc:mysql://localhost:3307/payment?serverTimezone=Asia/Shanghai"
                         userId="root"
                         password="root">
         </jdbcConnection>
@@ -27,17 +28,18 @@
         <javaClientGenerator targetPackage="com.xybh.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
 
         <!--数据表-->
-        <table tableName="carousel"></table>
-        <table tableName="category"></table>
-        <table tableName="items"></table>
-        <table tableName="items_comments"></table>
-        <table tableName="items_img"></table>
-        <table tableName="items_param"></table>
-        <table tableName="items_spec"></table>
-        <table tableName="order_items"></table>
-        <table tableName="order_status"></table>
+<!--        <table tableName="carousel"></table>-->
+<!--        <table tableName="category"></table>-->
+<!--        <table tableName="items"></table>-->
+<!--        <table tableName="items_comments"></table>-->
+<!--        <table tableName="items_img"></table>-->
+<!--        <table tableName="items_param"></table>-->
+<!--        <table tableName="items_spec"></table>-->
+<!--        <table tableName="order_items"></table>-->
+<!--        <table tableName="order_status"></table>-->
+<!--        <table tableName="orders"></table>-->
+<!--        <table tableName="user_address"></table>-->
+<!--        <table tableName="users"></table>-->
         <table tableName="orders"></table>
-        <table tableName="user_address"></table>
-        <table tableName="users"></table>
     </context>
 </generatorConfiguration>

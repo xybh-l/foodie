@@ -40,6 +40,15 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ItemService itemService;
 
+    @Override
+    public String queryUserIdByOrderId(String orderId) {
+        Orders orders = ordersMapper.selectByPrimaryKey(orderId);
+        if(orders != null){
+            return orders.getUserId();
+        }
+        return null;
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void updateOrderStatus(String orderId, Integer orderStatus) {
@@ -49,6 +58,12 @@ public class OrderServiceImpl implements OrderService {
         paidStatus.setPayTime(new Date());
 
         orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public OrderStatus queryOrderStatusInfo(String orderId) {
+        return orderStatusMapper.selectByPrimaryKey(orderId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

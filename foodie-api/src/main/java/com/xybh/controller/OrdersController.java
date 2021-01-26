@@ -2,6 +2,7 @@ package com.xybh.controller;
 
 import com.xybh.enums.OrderStatusEnum;
 import com.xybh.enums.PayMethod;
+import com.xybh.pojo.OrderStatus;
 import com.xybh.pojo.bo.SubmitOrderBO;
 import com.xybh.pojo.vo.MerchantOrdersVO;
 import com.xybh.pojo.vo.OrderVO;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 /**
  * @Author: xybh
@@ -26,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(value = "订单相关接口", tags = {"订单相关相关的api接口"})
 @RestController
 @RequestMapping("orders")
-public class OrdersController extends BaseController{
+public class OrdersController extends BaseController {
 
     @Autowired
     private OrderService orderService;
@@ -66,18 +68,25 @@ public class OrdersController extends BaseController{
 
         ResponseEntity<JSONResult> responseEntity =
                 restTemplate.postForEntity(PAYMENT_URL,
-                                            entity,
-                                            JSONResult.class);
+                        entity,
+                        JSONResult.class);
         JSONResult paymentResult = responseEntity.getBody();
         assert paymentResult != null;
-        if(paymentResult.getStatus() != HttpStatus.OK.value()){
+        if (paymentResult.getStatus() != HttpStatus.OK.value()) {
             return JSONResult.errorMsg("支付中心订单创建失败,请联系管理员");
         }
         return JSONResult.ok(orderId);
     }
 
+    @PostMapping("/getPaidOrderInfo")
+    public JSONResult getPaidOrderInfo(String orderId) {
+
+        OrderStatus orderStatus = orderService.queryOrderStatusInfo(orderId);
+        return JSONResult.ok(orderStatus);
+    }
+
     @PostMapping("/notifyMerchantOrderPaid")
-    public Integer notifyMerchantOrderPaid(String merchantOrderId){
+    public Integer notifyMerchantOrderPaid(String merchantOrderId) {
         orderService.updateOrderStatus(merchantOrderId, OrderStatusEnum.WAIT_DELIVER.type);
         return HttpStatus.OK.value();
     }
