@@ -13,6 +13,7 @@ import com.xybh.pojo.vo.OrderVO;
 import com.xybh.service.AddressService;
 import com.xybh.service.ItemService;
 import com.xybh.service.OrderService;
+import com.xybh.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -58,6 +60,33 @@ public class OrderServiceImpl implements OrderService {
         paidStatus.setPayTime(new Date());
 
         orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public void closeOrder() {
+        OrderStatus queryOrder = new OrderStatus();
+        queryOrder.setOrderStatus(OrderStatusEnum.WAIT_PAY.type);
+        List<OrderStatus> list = orderStatusMapper.select(queryOrder);
+        for(OrderStatus os : list){
+            // 获取订单创建时间
+            Date createdTime = os.getCreatedTime();
+            int days = DateUtil.daysBetween(createdTime, new Date());
+            if(days >= 1){
+                // 超过一天,关闭订单
+                doCloseOrder(os.getOrderId());
+            }
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    void doCloseOrder(String orderId){
+        OrderStatus close = new OrderStatus();
+        close.setOrderId(orderId);
+        close.setOrderStatus(OrderStatusEnum.CLOSE.type);
+        close.setCloseTime(new Date());
+
+        orderStatusMapper.updateByPrimaryKeySelective(close);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)

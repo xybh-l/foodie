@@ -43,4 +43,9 @@ public interface OrderService {
      * @return
      */
     OrderStatus queryOrderStatusInfo(String orderId);
+
+    /**
+     * 关闭订单
+     */
+    void closeOrder();
 }
