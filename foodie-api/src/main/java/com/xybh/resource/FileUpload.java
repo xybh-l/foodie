@@ -1,0 +1,37 @@
+package com.xybh.resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Author: xybh
+ * @Description:
+ * @Date: Created in 23:43 2021/1/27
+ * @Modified:
+ */
+@PropertySource("classpath:file-upload-dev.properties")
+@ConfigurationProperties(prefix = "file")
+@Component
+public class FileUpload {
+
+    private String imageUserFaceLocation;
+    private String imageServerUrl;
+
+    public String getImageServerUrl() {
+        return imageServerUrl;
+    }
+
+    public void setImageServerUrl(String imageServerUrl) {
+        this.imageServerUrl = imageServerUrl;
+    }
+
+    public String getImageUserFaceLocation() {
+        return imageUserFaceLocation;
+    }
+
+    public void setImageUserFaceLocation(String imageUserFaceLocation) {
+        this.imageUserFaceLocation = imageUserFaceLocation;
+    }
+}

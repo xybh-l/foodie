@@ -19,7 +19,12 @@ spring:
       test-while-idle: true
       validation-query: select 'x'
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-
+  servlet:
+    multipart:
+      # 文件上传大小限制为500Kb
+      max-file-size: 512000
+      # 请求大小限制为500Kb
+      max-request-size: 512000
 
 # mybatis配置
 mybatis:

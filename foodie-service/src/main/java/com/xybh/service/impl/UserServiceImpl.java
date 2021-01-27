@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public Users queryUserForLogin(String username, String password) {
