@@ -2,14 +2,11 @@ package com.xybh.controller.center;
 
 import cn.hutool.http.HttpStatus;
 import com.xybh.controller.BaseController;
-import com.xybh.pojo.Orders;
-import com.xybh.service.center.MyOrdersService;
 import com.xybh.utils.JSONResult;
 import com.xybh.utils.PagedGridResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,9 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/myorders")
 public class MyOrdersController extends BaseController {
-    @Autowired
-    private MyOrdersService ordersService;
-
     @ApiOperation(value = "查询我的订单", notes = "查询我的订单", httpMethod = "POST")
     @PostMapping("query")
     public JSONResult query(@RequestParam String userId,
@@ -64,12 +58,12 @@ public class MyOrdersController extends BaseController {
         if (StringUtils.isBlank(orderId) || StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg("订单号或用户id不能为空");
         }
-        JSONResult checkResult = checkUserOrder(orderId, userId);
+        JSONResult checkResult = checkUserOrder(userId, orderId);
         if (checkResult.getStatus() != HttpStatus.HTTP_OK) {
             return checkResult;
         }
         boolean result = ordersService.updateReceiveOrderStatus(orderId);
-        if (!result){
+        if (!result) {
             return JSONResult.errorMsg("订单确认收货失败");
         }
         return JSONResult.ok();
@@ -84,24 +78,11 @@ public class MyOrdersController extends BaseController {
             return JSONResult.errorMsg("订单号或用户id不能为空");
         }
         boolean result = ordersService.deleteOrder(userId, orderId);
-        if(!result){
+        if (!result) {
             return JSONResult.errorMsg("订单删除失败");
         }
         return JSONResult.ok();
     }
 
-    /**
-     * 用于验证订单与用户是否有关联
-     *
-     * @param orderId   订单号
-     * @param userId    用户id
-     * @return
-     */
-    private JSONResult checkUserOrder(String orderId, String userId) {
-        Orders order = ordersService.queryByOrder(orderId, userId);
-        if (order == null) {
-            return JSONResult.errorMsg("订单不存在");
-        }
-        return JSONResult.ok();
-    }
+
 }

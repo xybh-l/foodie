@@ -1,5 +1,9 @@
 package com.xybh.controller;
 
+import com.xybh.pojo.Orders;
+import com.xybh.service.center.MyOrdersService;
+import com.xybh.utils.JSONResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -12,6 +16,9 @@ import java.io.File;
  */
 @RestController
 public class BaseController {
+
+    @Autowired
+    public MyOrdersService ordersService;
 
     public static final String FOODIE_SHOPCART = "shopcart";
     public static final Integer COMMON_PAGE_SIZE = 10;
@@ -37,4 +44,19 @@ public class BaseController {
      * 用户上传头像的位置
      */
     public static final String IMAGE_USER_FACE_URL =  "E:"+File.separator+"Tomcat"+File.separator+"apache-tomcat-9.0.37"+File.separator+"webapps"+File.separator+"foodie-center"+File.separator+"face";
+
+    /**
+     * 用于验证订单与用户是否有关联
+     *
+     * @param userId    用户id
+     * @param orderId   订单号
+     * @return
+     */
+    public JSONResult checkUserOrder(String userId, String orderId) {
+        Orders order = ordersService.queryByOrder(orderId, userId);
+        if (order == null) {
+            return JSONResult.errorMsg("订单不存在");
+        }
+        return JSONResult.ok(order);
+    }
 }

@@ -35,7 +35,7 @@ import java.util.List;
  * @Modified:
  */
 @Service
-public class MyOrdersServiceImpl implements MyOrdersService {
+public class MyOrdersServiceImpl extends BaseService implements MyOrdersService {
 
     @Resource
     private OrdersExtMapper ordersExtMapper;
@@ -56,16 +56,6 @@ public class MyOrdersServiceImpl implements MyOrdersService {
         return setterPagedGrid(list, page);
     }
 
-
-    private PagedGridResult setterPagedGrid(List<?> list, Integer page) {
-        PageInfo<?> pageList = new PageInfo<>(list);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(list);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-        return grid;
-    }
 
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override

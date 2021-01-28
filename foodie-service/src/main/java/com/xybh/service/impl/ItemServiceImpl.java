@@ -13,6 +13,7 @@ import com.xybh.pojo.vo.ItemsCommentsVO;
 import com.xybh.pojo.vo.SearchItemsVO;
 import com.xybh.pojo.vo.ShopcartVO;
 import com.xybh.service.ItemService;
+import com.xybh.service.impl.center.BaseService;
 import com.xybh.utils.DesensitizationUtil;
 import com.xybh.utils.PagedGridResult;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import java.util.*;
  * @Modified:
  */
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseService implements ItemService {
 
     @Resource
     private ItemsMapper itemsMapper;
@@ -145,16 +146,6 @@ public class ItemServiceImpl implements ItemService {
         return setterPagedGrid(list, page);
     }
 
-    private PagedGridResult setterPagedGrid(List<?> list, Integer page) {
-        PageInfo<?> pageList = new PageInfo<>(list);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(list);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-        return grid;
-    }
-
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public String queryItemMainImgById(String itemId) {
@@ -193,7 +184,7 @@ public class ItemServiceImpl implements ItemService {
 //        }
 
         int result = itemsExtMapper.decreaseItemSpecStock(specId, buyCounts);
-        if(result != 1){
+        if (result != 1) {
             throw new RuntimeException("订单创建失败，原因：库存不足");
         }
     }
