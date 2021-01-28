@@ -1,5 +1,6 @@
 package com.xybh.service.center;
 
+import com.xybh.pojo.Orders;
 import com.xybh.utils.PagedGridResult;
 
 /**
@@ -26,4 +27,27 @@ public interface MyOrdersService {
      * @param orderId   订单id
      */
     void updateDeliverOrderStatus(String orderId);
+
+    /**
+     * 查询我的订单
+     * @param orderId   订单号
+     * @param userId    用户id
+     * @return
+     */
+    Orders queryByOrder(String orderId, String userId);
+
+    /**
+     * 更新订单状态为确认收货
+     * @param orderId   订单号
+     * @return
+     */
+    boolean updateReceiveOrderStatus(String orderId);
+
+    /**
+     * 删除订单(逻辑删除)
+     * @param userId
+     * @param orderId
+     * @return
+     */
+    boolean deleteOrder(String userId, String orderId);
 }
