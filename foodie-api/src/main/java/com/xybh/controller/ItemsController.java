@@ -1,10 +1,7 @@
 package com.xybh.controller;
 
-import com.xybh.enums.YesOrNo;
 import com.xybh.pojo.*;
 import com.xybh.pojo.vo.*;
-import com.xybh.service.CarouselService;
-import com.xybh.service.CategoryService;
 import com.xybh.service.ItemService;
 import com.xybh.utils.JSONResult;
 import com.xybh.utils.PagedGridResult;
@@ -15,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -84,7 +80,7 @@ public class ItemsController extends BaseController {
             page = 1;
         }
         if (pageSize == null) {
-            pageSize = COMMENT_PAGE_SIZE;
+            pageSize = COMMON_PAGE_SIZE;
         }
         PagedGridResult grid = itemService.queryPagedComments(itemId, level, page, pageSize);
         return JSONResult.ok(grid);

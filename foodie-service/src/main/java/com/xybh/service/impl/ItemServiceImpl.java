@@ -3,6 +3,7 @@ package com.xybh.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xybh.enums.CommentLevel;
+import com.xybh.enums.OrderStatusEnum;
 import com.xybh.enums.YesOrNo;
 import com.xybh.mapper.*;
 import com.xybh.mapper.ext.ItemsExtMapper;
@@ -20,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: xybh
@@ -183,7 +181,6 @@ public class ItemServiceImpl implements ItemService {
 
         return itemsExtMapper.queryItemsBySpecIds(specIdList);
     }
-
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override

@@ -111,4 +111,5 @@ public interface ItemService {
      * @param buyCounts 购买数量
      */
     void decreaseItemSpecStock(String specId, Integer buyCounts);
+
 }
