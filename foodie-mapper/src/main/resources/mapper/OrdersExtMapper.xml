@@ -11,7 +11,8 @@
         <result column="orderStatus" property="orderStatus"/>
         <result column="isComment" property="isComment"/>
 
-        <collection property="subOrderItemList"  select="getSubItems" column="orderId" ofType="com.xybh.pojo.vo.MySubOrderItemVO">
+        <collection property="subOrderItemList" select="getSubItems" column="orderId"
+                    ofType="com.xybh.pojo.vo.MySubOrderItemVO">
             <result column="itemId" property="itemId"/>
             <result column="itemName" property="itemName"/>
             <result column="itemImg" property="itemImg"/>
@@ -52,29 +53,39 @@
     </select>
 
 
-<!--    <select id="queryMyOrdersDoNotUse" resultMap="myOrdersVO" parameterType="Map">-->
-<!--        SELECT-->
-<!--        od.id AS orderId,-->
-<!--        od.created_time AS createdTime,-->
-<!--        od.pay_method AS payMethod,-->
-<!--        od.real_pay_amount AS realPayAmount,-->
-<!--        od.post_amount AS postAmount,-->
-<!--        os.order_status AS orderStatus,-->
-<!--        oi.item_id AS itemId,-->
-<!--        oi.item_name AS itemName,-->
-<!--        oi.item_img AS itemImg,-->
-<!--        oi.item_spec_id AS itemSpecId,-->
-<!--        oi.item_spec_name AS itemSpecName,-->
-<!--        oi.buy_counts AS buyCounts,-->
-<!--        oi.price AS price-->
-<!--        FROM orders od-->
-<!--        LEFT JOIN order_items oi ON od.id = oi.order_id-->
-<!--        LEFT JOIN order_status os ON os.order_id = od.id-->
-<!--        WHERE od.user_id = #{paramsMap.userId}-->
-<!--        AND od.is_delete = 0-->
-<!--        <if test="paramsMap.orderStatus!=null">-->
-<!--            And os.order_status = #{paramsMap.orderStatus}-->
-<!--        </if>-->
-<!--        ORDER BY od.created_time DESC-->
-<!--    </select>-->
+    <select id="queryStatusCounts" parameterType="map" resultType="integer">
+        SELECT COUNT(0)
+        FROM order_status os
+                 LEFT JOIN orders od
+                           ON od.id = os.order_id
+        WHERE od.user_id = #{paramsMap.userId}
+          AND os.order_status = #{paramsMap.orderStatus}
+          AND od.is_comment = 0
+    </select>
+
+    <!--    <select id="queryMyOrdersDoNotUse" resultMap="myOrdersVO" parameterType="Map">-->
+    <!--        SELECT-->
+    <!--        od.id AS orderId,-->
+    <!--        od.created_time AS createdTime,-->
+    <!--        od.pay_method AS payMethod,-->
+    <!--        od.real_pay_amount AS realPayAmount,-->
+    <!--        od.post_amount AS postAmount,-->
+    <!--        os.order_status AS orderStatus,-->
+    <!--        oi.item_id AS itemId,-->
+    <!--        oi.item_name AS itemName,-->
+    <!--        oi.item_img AS itemImg,-->
+    <!--        oi.item_spec_id AS itemSpecId,-->
+    <!--        oi.item_spec_name AS itemSpecName,-->
+    <!--        oi.buy_counts AS buyCounts,-->
+    <!--        oi.price AS price-->
+    <!--        FROM orders od-->
+    <!--        LEFT JOIN order_items oi ON od.id = oi.order_id-->
+    <!--        LEFT JOIN order_status os ON os.order_id = od.id-->
+    <!--        WHERE od.user_id = #{paramsMap.userId}-->
+    <!--        AND od.is_delete = 0-->
+    <!--        <if test="paramsMap.orderStatus!=null">-->
+    <!--            And os.order_status = #{paramsMap.orderStatus}-->
+    <!--        </if>-->
+    <!--        ORDER BY od.created_time DESC-->
+    <!--    </select>-->
 </mapper>

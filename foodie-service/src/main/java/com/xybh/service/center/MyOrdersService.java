@@ -45,9 +45,17 @@ public interface MyOrdersService {
 
     /**
      * 删除订单(逻辑删除)
-     * @param userId
-     * @param orderId
+     * @param userId    用户id
+     * @param orderId   订单状态
      * @return
      */
     boolean deleteOrder(String userId, String orderId);
+
+    /**
+     * 查询订单状态数量
+     * @param userId    用户id
+     * @param status    订单状态
+     * @return
+     */
+    Integer queryStatusCounts(String userId, Integer status);
 }

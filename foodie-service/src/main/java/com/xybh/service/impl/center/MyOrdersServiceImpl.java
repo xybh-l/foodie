@@ -98,6 +98,15 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
         return result == 1;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public Integer queryStatusCounts(String userId, Integer status) {
+        HashMap<String, Object> map = new HashMap<>(2);
+        map.put("userId", userId);
+        map.put("orderStatus", status);
+        return ordersExtMapper.queryStatusCounts(map);
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public boolean deleteOrder(String userId, String orderId) {

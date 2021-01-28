@@ -2,6 +2,8 @@ package com.xybh.controller.center;
 
 import cn.hutool.http.HttpStatus;
 import com.xybh.controller.BaseController;
+import com.xybh.enums.OrderStatusEnum;
+import com.xybh.pojo.bo.center.OrderStatusCountBO;
 import com.xybh.utils.JSONResult;
 import com.xybh.utils.PagedGridResult;
 import io.swagger.annotations.Api;
@@ -84,5 +86,26 @@ public class MyOrdersController extends BaseController {
         return JSONResult.ok();
     }
 
+    @ApiOperation(value = "查询订单状态数量", notes = "查询订单状态数量", httpMethod = "POST")
+    @PostMapping("statusCounts")
+    public JSONResult statusCounts(@RequestParam String userId) {
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg("用户id不能为空");
+        }
+        Integer waitPayCounts = ordersService.queryStatusCounts(userId, OrderStatusEnum.WAIT_PAY.type);
+        Integer waitDeliverCounts = ordersService.queryStatusCounts(userId, OrderStatusEnum.WAIT_DELIVER.type);
+        Integer waitReceiveCounts = ordersService.queryStatusCounts(userId, OrderStatusEnum.WAIT_RECEIVE.type);
+        Integer waitCommentCounts = ordersService.queryStatusCounts(userId, OrderStatusEnum.SUCCESS.type);
+        int totalCounts = waitPayCounts + waitDeliverCounts + waitReceiveCounts + waitCommentCounts;
+
+        OrderStatusCountBO orderStatusCountBO = new OrderStatusCountBO();
+        orderStatusCountBO.setWaitPayCounts(waitPayCounts);
+        orderStatusCountBO.setWaitDeliverCounts(waitDeliverCounts);
+        orderStatusCountBO.setWaitReceiveCounts(waitReceiveCounts);
+        orderStatusCountBO.setWaitCommentCounts(waitCommentCounts);
+        orderStatusCountBO.setTotalCounts(totalCounts);
+
+        return JSONResult.ok(orderStatusCountBO);
+    }
 
 }

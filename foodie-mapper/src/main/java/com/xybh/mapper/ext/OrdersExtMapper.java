@@ -5,6 +5,7 @@ import com.xybh.pojo.vo.MyOrdersVO;
 import com.xybh.pojo.vo.NewItemsVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,4 +23,11 @@ public interface OrdersExtMapper {
      * @return
      */
     List<MyOrdersVO> queryMyOrders(@Param("paramsMap") Map<String, Object> map);
+
+    /**
+     * 查询订单状态数量
+     * @param map 参数信息
+     * @return
+     */
+    Integer queryStatusCounts(@Param("paramsMap") HashMap<String, Object> map);
 }
