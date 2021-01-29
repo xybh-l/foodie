@@ -51,12 +51,15 @@ public class AlipayConfig {
     /**
      * 回调地址
      */
-    public static String RETURN_URL = "http://localhost:8089/alipayResult";
+//    public static String RETURN_URL = "http://localhost:8089/alipayResult";
+    public static String RETURN_URL = "http://payment.z.xybh.online:8089/foodie-payment/alipayResult";
+
 
     /**
      * 异步通知地址
      */
-    public static String NOTIFY_URL = "http://foodshop.xybh.online/payment/notice/alipay";
+//    public static String NOTIFY_URL = "http://foodshop.xybh.online/payment/notice/alipay";
+    public static String NOTIFY_URL = "http://payment.z.xybh.online:8089/foodie-payment/payment/notice/alipay";
 
     /**
      * 私有化构造方法

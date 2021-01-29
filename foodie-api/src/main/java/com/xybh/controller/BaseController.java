@@ -25,15 +25,15 @@ public class BaseController {
     public static final Integer PAGE_SIZE = 20;
 
     /**
-     * 微信支付成功 -> 支付中心 -> 吃货平台
+     * 微信支付成功 -> 支付中心 -> 吃货平台 -> 回调通知的url
      */
-    public static final String PAY_RETURN_URL = "http://localhost:8088/orders/notifyMerchantOrderPaid";
+    public static final String PAY_RETURN_URL = "http://api.z.xybh.online:8088/foodie-api/orders/notifyMerchantOrderPaid";
 
     /**
      * 支付中心
      */
-    public static final String PAYMENT_URL = "http://localhost:8089/payment/createMerchantOrder";
-//    public static final String PAYMENT_URL = "https://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";
+//    public static final String PAYMENT_URL = "http://localhost:8089/payment/createMerchantOrder";
+    public static final String PAYMENT_URL = "http://payment.z.xybh.online:8089/foodie-payment/payment/createMerchantOrder";
 
     /**
      * 查询订单详情

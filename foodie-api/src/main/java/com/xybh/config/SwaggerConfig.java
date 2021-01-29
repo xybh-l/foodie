@@ -1,5 +1,6 @@
 package com.xybh.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -19,6 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
+@EnableKnife4j
 public class SwaggerConfig {
     // swagger2访问地址: 主机名:端口号/swagger-ui.html
     //  bootstrap页面: 主机名:端口号/doc.html
@@ -53,7 +55,7 @@ public class SwaggerConfig {
                 // 版本信息
                 .version("v0.0.1")
                 // 项目URL
-                .termsOfServiceUrl("127.0.0.1")
+                .termsOfServiceUrl("http://api.z.xybh.online/")
                 .build();
     }
 

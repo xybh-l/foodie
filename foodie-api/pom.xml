@@ -11,6 +11,9 @@
 
     <artifactId>foodie-api</artifactId>
 
+    <!-- 打包war[1] -->
+    <packaging>war</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.xybh</groupId>
@@ -20,7 +23,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>5.2.5.RELEASE</version>
         </dependency>
     </dependencies>
 </project>

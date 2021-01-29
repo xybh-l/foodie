@@ -1,5 +1,6 @@
 package com.xybh.mapper.ext;
 
+import com.xybh.pojo.OrderStatus;
 import com.xybh.pojo.vo.CategoryVO;
 import com.xybh.pojo.vo.MyOrdersVO;
 import com.xybh.pojo.vo.NewItemsVO;
@@ -30,4 +31,11 @@ public interface OrdersExtMapper {
      * @return
      */
     Integer queryStatusCounts(@Param("paramsMap") HashMap<String, Object> map);
+
+    /**
+     * 查询订单动态
+     * @param map   参数信息
+     * @return
+     */
+    List<OrderStatus> getMyOrderTrend(@Param("paramsMap") HashMap<String, Object> map);
 }

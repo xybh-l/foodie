@@ -4,7 +4,6 @@ import com.xybh.mapper.UsersMapper;
 import com.xybh.pojo.Users;
 import com.xybh.pojo.bo.center.CenterUserBO;
 import com.xybh.service.center.CenterUserService;
-import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

@@ -11,12 +11,13 @@ import org.springframework.stereotype.Component;
  * @Date: Created in 23:43 2021/1/27
  * @Modified:
  */
-@PropertySource("classpath:file-upload-dev.properties")
-@ConfigurationProperties(prefix = "file")
+@PropertySource("classpath:file-upload-prod.properties")
 @Component
 public class FileUpload {
 
+    @Value("${file.imageUserFaceLocation}")
     private String imageUserFaceLocation;
+    @Value("${file.imageServerUrl}")
     private String imageServerUrl;
 
     public String getImageServerUrl() {

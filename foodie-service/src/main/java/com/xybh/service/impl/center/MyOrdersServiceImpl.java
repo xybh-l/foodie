@@ -44,6 +44,7 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
     @Resource
     private OrderStatusMapper orderStatusMapper;
 
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     @Override
     public PagedGridResult queryMyOrders(String userId, Integer orderStatus, Integer page, Integer pageSize) {
         HashMap<String, Object> map = new HashMap<>(2);
@@ -96,6 +97,16 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
                 .andEqualTo("orderStatus", OrderStatusEnum.WAIT_RECEIVE.type);
         int result = orderStatusMapper.updateByExampleSelective(orderStatus, example);
         return result == 1;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    @Override
+    public PagedGridResult getOrdersTrend(String userId, Integer page, Integer pageSize) {
+        HashMap<String, Object> map = new HashMap<>(2);
+        map.put("userId", userId);
+        PageHelper.startPage(page, pageSize);
+        List<OrderStatus> list = ordersExtMapper.getMyOrderTrend(map);
+        return setterPagedGrid(list, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)

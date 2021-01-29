@@ -108,4 +108,22 @@ public class MyOrdersController extends BaseController {
         return JSONResult.ok(orderStatusCountBO);
     }
 
+    @ApiOperation(value = "查询订单动态", notes = "查询订单动态", httpMethod = "POST")
+    @PostMapping("trend")
+    public JSONResult query(@RequestParam String userId,
+                            @RequestParam Integer page,
+                            @RequestParam Integer pageSize) {
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg("");
+        }
+        if (page == null) {
+            page = 1;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        PagedGridResult result = ordersService.getOrdersTrend(userId, page, pageSize);
+        return JSONResult.ok(result);
+    }
 }

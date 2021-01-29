@@ -1,8 +1,11 @@
 package com.xybh.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,7 +17,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Modified:
  */
 @Configuration
+@PropertySource("classpath:file-upload-prod.properties")
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("${file.imageUserFaceLocation}")
+    private String imageUserFaceLocation;
 
     /**
      *  实现静态资源的映射
@@ -25,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 // 映射swagger2
                 .addResourceLocations("classpath:/META-INF/resources/")
                 // 映射本地静态资源
-                .addResourceLocations("file:E:/Tomcat/apache-tomcat-9.0.37/webapps/foodie-center/");
+                .addResourceLocations("file:"+ imageUserFaceLocation);
     }
 
     @Bean

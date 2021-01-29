@@ -9,9 +9,9 @@ server:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/food-shop?serverTimezone=Asia/Shanghai
-    username: root
-    password: root
+#    url: jdbc:mysql://localhost:3306/food-shop?serverTimezone=Asia/Shanghai
+#    username: root
+#    password: root
     druid:
       initial-size: 5
       min-idle: 5
@@ -25,13 +25,15 @@ spring:
       max-file-size: 512000
       # 请求大小限制为500Kb
       max-request-size: 512000
+  profiles:
+    active: prod
 
 # mybatis配置
 mybatis:
   type-aliases-package: com.xybh.pojo       # 所有POJO类所在的包路径
   mapper-locations: classpath:mapper/*.xml  # mapper映射文件所在的位置
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 通用Mapper 配置
 mapper:

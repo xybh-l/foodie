@@ -63,6 +63,23 @@
           AND od.is_comment = 0
     </select>
 
+    <select id="getMyOrderTrend" parameterType="map" resultType="com.xybh.pojo.OrderStatus">
+        SELECT os.order_id     AS orderId,
+               os.order_status AS orderStatus,
+               os.created_time AS createdTime,
+               os.pay_time     AS payTime,
+               os.deliver_time AS deliverTime,
+               os.success_time AS successTime,
+               os.close_time   AS closeTime,
+               os.comment_time AS commentTime
+        FROM orders o
+                 LEFT JOIN order_status os ON o.id = os.order_id
+        WHERE o.is_delete = 0
+          AND o.user_id = #{paramsMap.userId}
+          AND os.order_status IN (20, 30, 40)
+        ORDER BY os.order_id DESC
+    </select>
+
     <!--    <select id="queryMyOrdersDoNotUse" resultMap="myOrdersVO" parameterType="Map">-->
     <!--        SELECT-->
     <!--        od.id AS orderId,-->

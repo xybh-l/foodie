@@ -9,9 +9,10 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * @Author: xybh
  * @Description:
- * @Date: Created in 18:40 2021/1/26
+ * @Date: Created in 17:06 2021/1/21
  * @Modified:
  */
+
 @Configuration
 public class CorsConfig {
 
@@ -20,26 +21,25 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-        //1.添加CORS配置信息
+        // 1.添加cors配置信息
         CorsConfiguration config = new CorsConfiguration();
-        //放行哪些原始域 不要写*，不然cookie在前端获取不到
-        config.addAllowedOriginPattern("*");
-        //是否发送Cookie信息
+        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("http://shop.z.xybh.online:8080");
+        config.addAllowedOrigin("http://center.z.xybh.online:8080");
+        config.addAllowedOrigin("http://payment.z.xybh.online:8080");
+
+        // 设置是否发送cookie信息
         config.setAllowCredentials(true);
-        //放行哪些原始域(请求方式)
+        // 设置允许请求的方式
         config.addAllowedMethod("*");
-        //放行哪些原始域(头部信息)
+        // 设置允许的header
         config.addAllowedHeader("*");
-        //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
-//        config.addExposedHeader("*");
 
-        //2.添加映射路径
-        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
-        configSource.registerCorsConfiguration("/**", config);
+        // 2.为url添加映射路径
+        UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
+        corsSource.registerCorsConfiguration("/**", config);
 
-        //3.返回新的CorsFilter.
-        return new CorsFilter(configSource);
+        // 3.返回重新定义好的corsSource
+        return new CorsFilter(corsSource);
     }
-
-
 }
