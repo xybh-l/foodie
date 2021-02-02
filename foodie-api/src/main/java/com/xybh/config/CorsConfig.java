@@ -23,17 +23,13 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         // 1.添加cors配置信息
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOrigin("http://shop.z.xybh.online:8080");
-        config.addAllowedOrigin("http://center.z.xybh.online:8080");
-        config.addAllowedOrigin("http://payment.z.xybh.online:8080");
-
-        // 设置是否发送cookie信息
-        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
         // 设置允许请求的方式
         config.addAllowedMethod("*");
         // 设置允许的header
         config.addAllowedHeader("*");
+        // 设置是否发送cookie信息
+        config.setAllowCredentials(true);
 
         // 2.为url添加映射路径
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();

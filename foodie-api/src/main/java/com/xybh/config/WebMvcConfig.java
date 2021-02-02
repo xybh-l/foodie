@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Modified:
  */
 @Configuration
-@PropertySource("classpath:file-upload-prod.properties")
+@PropertySource("classpath:file-upload-dev.properties")
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Value("${file.imageUserFaceLocation}")

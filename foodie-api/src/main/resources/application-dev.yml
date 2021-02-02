@@ -6,7 +6,13 @@ spring:
     url: jdbc:mysql://localhost:3306/food-shop?serverTimezone=Asia/Shanghai
     username: root
     password: root
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+
 
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

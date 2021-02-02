@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Date: Created in 23:43 2021/1/27
  * @Modified:
  */
-@PropertySource("classpath:file-upload-prod.properties")
+@PropertySource("classpath:file-upload-dev.properties")
 @Component
 public class FileUpload {
 

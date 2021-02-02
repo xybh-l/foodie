@@ -26,7 +26,7 @@ spring:
       # 请求大小限制为500Kb
       max-request-size: 512000
   profiles:
-    active: prod
+    active: dev
 
 # mybatis配置
 mybatis:
