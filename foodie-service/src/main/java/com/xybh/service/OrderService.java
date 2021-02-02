@@ -4,6 +4,7 @@ import cn.hutool.db.sql.Order;
 import com.xybh.pojo.OrderStatus;
 import com.xybh.pojo.UserAddress;
 import com.xybh.pojo.bo.AddressBo;
+import com.xybh.pojo.bo.ShopcartBO;
 import com.xybh.pojo.bo.SubmitOrderBO;
 import com.xybh.pojo.vo.OrderVO;
 
@@ -21,7 +22,7 @@ public interface OrderService {
      * 创建订单
      * @param submitOrderBO 订单BO
      */
-    OrderVO createOrder(SubmitOrderBO submitOrderBO);
+    OrderVO createOrder(SubmitOrderBO submitOrderBO, List<ShopcartBO> shopcartList);
 
     /**
      * 更新订单状态

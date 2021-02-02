@@ -1,15 +1,19 @@
 package com.xybh.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.xybh.enums.OrderStatusEnum;
 import com.xybh.enums.PayMethod;
 import com.xybh.pojo.OrderStatus;
+import com.xybh.pojo.bo.ShopcartBO;
 import com.xybh.pojo.bo.SubmitOrderBO;
 import com.xybh.pojo.vo.MerchantOrdersVO;
 import com.xybh.pojo.vo.OrderVO;
 import com.xybh.service.OrderService;
 import com.xybh.utils.JSONResult;
+import com.xybh.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Author: xybh
@@ -34,6 +39,8 @@ public class OrdersController extends BaseController {
     private OrderService orderService;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private RedisOperator redisOperator;
 
     @ApiOperation(value = "用户下单", notes = "用户下单", httpMethod = "POST")
     @PostMapping("/create")
@@ -45,8 +52,16 @@ public class OrdersController extends BaseController {
                 !submitOrderBO.getPayMethod().equals(PayMethod.WEIXIN.type)) {
             return JSONResult.errorMsg("支付方式不支持");
         }
+
+        String shopcartJson = redisOperator.get(FOODIE_SHOPCART + ":" + submitOrderBO.getUserId());
+        if(StringUtils.isBlank(shopcartJson)){
+            return JSONResult.errorMsg("购物车数据不正确");
+        }
+
+        List<ShopcartBO> shopcartList = JSON.parseArray(shopcartJson, ShopcartBO.class);
+
         // 1.创建订单
-        OrderVO orderVO = orderService.createOrder(submitOrderBO);
+        OrderVO orderVO = orderService.createOrder(submitOrderBO, shopcartList);
         String orderId = orderVO.getOrderId();
         MerchantOrdersVO merchantOrdersVO = orderVO.getMerchantOrdersVO();
         merchantOrdersVO.setReturnUrl(PAY_RETURN_URL);

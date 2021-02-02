@@ -7,6 +7,7 @@ import com.xybh.mapper.OrderItemsMapper;
 import com.xybh.mapper.OrderStatusMapper;
 import com.xybh.mapper.OrdersMapper;
 import com.xybh.pojo.*;
+import com.xybh.pojo.bo.ShopcartBO;
 import com.xybh.pojo.bo.SubmitOrderBO;
 import com.xybh.pojo.vo.MerchantOrdersVO;
 import com.xybh.pojo.vo.OrderVO;
@@ -28,7 +29,7 @@ import java.util.List;
  * @author a1353
  */
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService{
 
     @Resource
     private OrdersMapper ordersMapper;
@@ -97,14 +98,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
-    public OrderVO createOrder(SubmitOrderBO submitOrderBO) {
+    public OrderVO createOrder(SubmitOrderBO submitOrderBO, List<ShopcartBO> shopcartList) {
         String userId = submitOrderBO.getUserId();
         Integer payMethod = submitOrderBO.getPayMethod();
         String addressId = submitOrderBO.getAddressId();
         String itemSpecIds = submitOrderBO.getItemSpecIds();
         String leftMsg = submitOrderBO.getLeftMsg();
         // 包邮费用设置为0
-        Integer postAmount = 0;
+        int postAmount = 0;
 
         // 1.新订单数据保存
         String orderId = IdUtil.getSnowflake(0, 0).nextIdStr();
@@ -131,8 +132,10 @@ public class OrderServiceImpl implements OrderService {
         int realPayAmount = 0;
         for (String itemSpecId : itemSpec) {
 
-            // TODO 整合redis后,商品购买的数量重新从redis的购物车中获取
-            int buyCounts = 1;
+            // 整合redis后,商品购买的数量重新从redis的购物车中获取
+            ShopcartBO shopcartBO = getShopcartBoByRedis(shopcartList, itemSpecId);
+            int buyCounts = shopcartBO.getBuyCounts();
+
             // 2.1  根据规格id,查询规格的具体信息,主要获取价格
             ItemsSpec itemsSpec = itemService.queryItemSpecById(itemSpecId);
             totalAmount += itemsSpec.getPriceNormal() * buyCounts;
@@ -181,5 +184,14 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
         return orderVO;
+    }
+
+    private ShopcartBO getShopcartBoByRedis(List<ShopcartBO> shopcartList, String itemSpecId){
+        for (ShopcartBO sc : shopcartList) {
+            if (itemSpecId.equals(sc.getSpecId())){
+                return sc;
+            }
+        }
+        return null;
     }
 }
