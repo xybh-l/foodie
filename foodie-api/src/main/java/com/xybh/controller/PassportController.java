@@ -2,11 +2,13 @@ package com.xybh.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.xybh.pojo.Users;
+import com.xybh.pojo.bo.ShopcartBO;
 import com.xybh.pojo.bo.UserBO;
 import com.xybh.service.UserService;
 import com.xybh.utils.CookieUtils;
 import com.xybh.utils.JSONResult;
 import com.xybh.utils.JsonUtils;
+import com.xybh.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: xybh
@@ -27,10 +31,13 @@ import java.net.URLEncoder;
 @Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping("passport")
-public class PassportController {
+public class PassportController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisOperator redisOperator;
 
     @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在")
     @GetMapping("/usernameIsExist")
@@ -96,12 +103,82 @@ public class PassportController {
         }
 
         setNullProperty(user);
-        CookieUtils. setCookie(request, response, "user", JsonUtils.objectToJson(user), true);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(user), true);
 
         // TODO 生成用户token, 存入redis会话
         // TODO 同步购物车数据
+        syncShopcartData(user.getId(), request, response);
 
         return JSONResult.ok(user);
+    }
+
+
+    @ApiOperation(value = "退出登录", notes = "注销")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestParam String userId,
+                             HttpServletRequest request,
+                             HttpServletResponse response) {
+        // 清除用户相关的cookie
+        CookieUtils.deleteCookie(request, response, "user");
+
+        // TODO 用户退出登录,清空购物车
+        CookieUtils.deleteCookie(request, response, FOODIE_SHOPCART);
+        // TODO 分布式会话中需要清除用户数据
+        return JSONResult.ok();
+    }
+
+    /**
+     * 注册登录后,同步cookie和redis中的购物车数据
+     */
+    private void syncShopcartData(String userId,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
+        // 1.redis中无数据, 如果cookie中的购物车也为空,则不操作
+        // 2.redis中无数据, 如果cookie中的购物车不为空,这此时直接放入redis
+        // 3.redis中有数据, 如果cookie中的购物车为空,则直接把redis中的购物车覆盖本地cookie
+        // 4.redis中有数据, 如果cookie中的购物车不为空,则合并购物车(以cookie中的数据为主)
+        // 5.同步到redis中后,覆盖本地cookie购物车的数据
+
+        // 从redis中获取购物车
+        String shopcartJsonRedis = redisOperator.get(FOODIE_SHOPCART + ":" + userId);
+        // 从cookie中获取购物车
+        String shopcartStrCookie = CookieUtils.getCookieValue(request, FOODIE_SHOPCART, true);
+
+        if (StringUtils.isBlank(shopcartJsonRedis)) {
+            if (StringUtils.isNotBlank(shopcartStrCookie)) {
+                redisOperator.set(FOODIE_SHOPCART + ":" + userId, shopcartStrCookie);
+            }
+        } else {
+            if (StringUtils.isBlank(shopcartStrCookie) || "[]".equals(shopcartStrCookie)) {
+                CookieUtils.setCookie(request, response, FOODIE_SHOPCART, shopcartJsonRedis, true);
+            } else {
+                List<ShopcartBO> shopcartListRedis = JSON.parseArray(shopcartJsonRedis, ShopcartBO.class);
+                List<ShopcartBO> shopcartListCookie = JSON.parseArray(shopcartStrCookie, ShopcartBO.class);
+
+                // 定义一个待删除list
+                List<ShopcartBO> pendingDeleteList = new ArrayList<>();
+                for (ShopcartBO redisShopcart : shopcartListRedis) {
+                    String redisSpecId = redisShopcart.getSpecId();
+                    for (ShopcartBO cookieShopcart :
+                            shopcartListCookie) {
+                        String cookieSpecId = cookieShopcart.getSpecId();
+                        if (redisSpecId.equals(cookieSpecId)) {
+                            // 覆盖购买数量，不累加
+                            redisShopcart.setBuyCounts(cookieShopcart.getBuyCounts());
+                            // 把cookieShopcart放入待删除列表,用于最后的删除合并
+                            pendingDeleteList.add(cookieShopcart);
+                        }
+                    }
+                }
+                // 从现有cookie中删除对应的覆盖过的数据
+                shopcartListCookie.removeAll(pendingDeleteList);
+                // 合并两个list
+                shopcartListRedis.addAll(shopcartListCookie);
+                // 更新到redis和cookie
+                CookieUtils.setCookie(request, response, FOODIE_SHOPCART, JSON.toJSONString(shopcartListRedis), true);
+                redisOperator.set(FOODIE_SHOPCART + ":" + userId, JSON.toJSONString(shopcartListRedis));
+            }
+        }
     }
 
     private Users setNullProperty(Users user) {
@@ -113,19 +190,6 @@ public class PassportController {
         user.setBirthday(null);
 
         return user;
-    }
-
-    @ApiOperation(value = "退出登录", notes = "注销")
-    @PostMapping("/logout")
-    public JSONResult logout(@RequestParam String userId,
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
-        // 清除用户相关的cookie
-        CookieUtils.deleteCookie(request, response, "user");
-
-        // TODO 用户退出登录,清空购物车
-        // TODO 分布式会话中需要清楚用户数据
-        return JSONResult.ok();
     }
 
 }
