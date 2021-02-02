@@ -1,5 +1,7 @@
 package com.xybh.pojo.vo;
 
+import com.xybh.pojo.bo.ShopcartBO;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,16 @@ import java.util.List;
 public class OrderVO {
     private String orderId;
     private MerchantOrdersVO merchantOrdersVO;
+
+    private List<ShopcartBO> toBeRemovedShopcartList;
+
+    public List<ShopcartBO> getToBeRemovedShopcartList() {
+        return toBeRemovedShopcartList;
+    }
+
+    public void setToBeRemovedShopcartList(List<ShopcartBO> toBeRemovedShopcartList) {
+        this.toBeRemovedShopcartList = toBeRemovedShopcartList;
+    }
 
     @Override
     public String toString() {
