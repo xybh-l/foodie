@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: xybh
@@ -86,7 +87,13 @@ public class IndexController {
         List<CategoryVO> subCatList;
         if(StringUtils.isBlank(subCat)){
            subCatList = categoryService.getSubCatList(rootCatId);
-           redisOperator.hset("subCats", rootCatId.toString(), JSON.toJSONString(subCatList));
+           // 防止缓存穿透
+           if(subCatList == null || subCatList.size() == 0){
+               redisOperator.hset("subCats", rootCatId.toString(), JSON.toJSONString(subCatList));
+               redisOperator.expire("subCats", 5*60, TimeUnit.SECONDS);
+           }else {
+               redisOperator.hset("subCats", rootCatId.toString(), JSON.toJSONString(subCatList));
+           }
         }else {
             subCatList = JSON.parseArray(subCat, CategoryVO.class);
         }

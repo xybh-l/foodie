@@ -1,12 +1,17 @@
 package com.xybh.controller;
 
 import com.xybh.pojo.Orders;
+import com.xybh.pojo.Users;
+import com.xybh.pojo.vo.UsersVO;
 import com.xybh.service.center.MyOrdersService;
 import com.xybh.utils.JSONResult;
+import com.xybh.utils.RedisOperator;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.util.UUID;
 
 /**
  * @Author: xybh
@@ -19,10 +24,14 @@ public class BaseController {
 
     @Autowired
     public MyOrdersService ordersService;
+    @Autowired
+    public RedisOperator redisOperator;
 
     public static final String FOODIE_SHOPCART = "shopcart";
     public static final Integer COMMON_PAGE_SIZE = 10;
     public static final Integer PAGE_SIZE = 20;
+
+    public static final String REDIS_USER_TOKEN = "redis_user_token";
 
     /**
      * 微信支付成功 -> 支付中心 -> 吃货平台 -> 回调通知的url
@@ -59,5 +68,20 @@ public class BaseController {
             return JSONResult.errorMsg("订单不存在");
         }
         return JSONResult.ok(order);
+    }
+
+    /**
+     * 生成token
+     * @param user
+     * @return
+     */
+    public UsersVO convertUsersVO(Users user) {
+        // 生成用户token, 存入redis会话
+        String uniqueToken = UUID.randomUUID().toString().trim();
+        redisOperator.set(REDIS_USER_TOKEN + ":" + user.getId(), uniqueToken);
+        UsersVO usersVO = new UsersVO();
+        BeanUtils.copyProperties(user, usersVO);
+        usersVO.setUniqueToken(uniqueToken);
+        return usersVO;
     }
 }

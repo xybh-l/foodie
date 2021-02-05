@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.xybh.controller.BaseController;
 import com.xybh.pojo.Users;
 import com.xybh.pojo.bo.center.CenterUserBO;
+import com.xybh.pojo.vo.UsersVO;
 import com.xybh.resource.FileUpload;
 import com.xybh.service.center.CenterUserService;
 import com.xybh.utils.CookieUtils;
@@ -122,9 +123,9 @@ public class CenterUserController extends BaseController {
         String finalUserFaceUrl = imageServerUrl + uploadPathPrefix;
         // 更新用户头像到数据库
         Users user = centerUserService.updateUserFace(userId, finalUserFaceUrl);
-        setNullProperty(user);
-        CookieUtils.setCookie(request, response, "user", JSON.toJSONString(user), true);
-        // TODO 后续要改,增加令牌token,整合进redis,分布式会话
+        UsersVO usersVO = convertUsersVO(user);
+        // 增加令牌token,整合进redis,分布式会话
+        CookieUtils.setCookie(request, response, "user", JSON.toJSONString(usersVO), true);
         return JSONResult.ok();
     }
 
@@ -144,10 +145,10 @@ public class CenterUserController extends BaseController {
             return JSONResult.errorMsg("");
         }
         Users userResult = centerUserService.updateUserInfo(userId, userBo);
-        setNullProperty(userResult);
-        CookieUtils.setCookie(request, response, "user", JSON.toJSONString(userResult), true);
+        // 增加令牌token,整合进redis,分布式会话
+        UsersVO usersVO = convertUsersVO(userResult);
+        CookieUtils.setCookie(request, response, "user", JSON.toJSONString(usersVO), true);
 
-        // TODO 后续要改,增加令牌token,整合进redis,分布式会话
         return JSONResult.ok();
     }
 

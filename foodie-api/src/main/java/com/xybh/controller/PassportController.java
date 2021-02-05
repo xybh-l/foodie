@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.xybh.pojo.Users;
 import com.xybh.pojo.bo.ShopcartBO;
 import com.xybh.pojo.bo.UserBO;
+import com.xybh.pojo.vo.UsersVO;
 import com.xybh.service.UserService;
 import com.xybh.utils.CookieUtils;
 import com.xybh.utils.JSONResult;
@@ -12,15 +13,15 @@ import com.xybh.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: xybh
@@ -102,16 +103,17 @@ public class PassportController extends BaseController {
             return JSONResult.errorMsg("账号或密码错误");
         }
 
-        setNullProperty(user);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(user), true);
+        //setNullProperty(user);
 
-        // TODO 生成用户token, 存入redis会话
-        // TODO 同步购物车数据
+        // 实现用户的Redis会话
+        UsersVO usersVO = convertUsersVO(user);
+
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
+        // 同步购物车数据
         syncShopcartData(user.getId(), request, response);
 
-        return JSONResult.ok(user);
+        return JSONResult.ok(usersVO);
     }
-
 
     @ApiOperation(value = "退出登录", notes = "注销")
     @PostMapping("/logout")
@@ -121,9 +123,11 @@ public class PassportController extends BaseController {
         // 清除用户相关的cookie
         CookieUtils.deleteCookie(request, response, "user");
 
-        // TODO 用户退出登录,清空购物车
+        // 用户退出登录,清空购物车
         CookieUtils.deleteCookie(request, response, FOODIE_SHOPCART);
-        // TODO 分布式会话中需要清除用户数据
+
+        // 分布式会话中需要清除用户数据
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
         return JSONResult.ok();
     }
 

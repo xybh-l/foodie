@@ -8,8 +8,14 @@ spring:
     password: root
   redis:
     database: 1
-    host: localhost
-    port: 6379
+    sentinel:
+      master: mymaster
+      nodes: 192.168.31.46:26379, 192.168.31.46:26479, 192.168.13.137:26379
+    # Redis 单机单实例
+#    database: 2
+#    host: localhost
+#    port: 6379
+    # Redis 哨兵模式
 
 
 mybatis:
