@@ -113,7 +113,7 @@ public class RedisOperator {
      * @param value
      * @param timeout
      */
-    public void setAndExpire(String key, String value, long timeout) {
+    public void set(String key, String value, long timeout) {
         redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
     }
 

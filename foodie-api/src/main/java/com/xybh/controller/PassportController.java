@@ -103,8 +103,6 @@ public class PassportController extends BaseController {
             return JSONResult.errorMsg("账号或密码错误");
         }
 
-        //setNullProperty(user);
-
         // 实现用户的Redis会话
         UsersVO usersVO = convertUsersVO(user);
 
